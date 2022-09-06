@@ -4,11 +4,11 @@ const User = require('../models/user')
 
 class UserService {
   /**
-     * Cria um usuário na base de dados
-     *
-     * @param {Object} usuário
-     * @returns usuário criado
-     */
+   * Cria um usuário na base de dados
+   *
+   * @param {Object} usuário
+   * @returns usuário criado
+   */
   static async create (user) {
     const salt = await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(user.password, salt)
@@ -19,12 +19,12 @@ class UserService {
   }
 
   /**
-     * Verifica se existe usuário com este email e valida a senha
-     *
-     * @param {string} email
-     * @param {string} password
-     * @returns usuário
-     */
+   * Verifica se existe usuário com este email e se a senha é válida
+   *
+   * @param {string} email
+   * @param {string} password
+   * @returns usuário
+   */
   static async login (email, password) {
     const user = await UserService.findByEmail(email)
 
@@ -39,6 +39,12 @@ class UserService {
     return user
   }
 
+  /**
+   * resgata um usuário dado o id
+   *
+   * @param {string} id
+   * @returns usuário
+   */
   static async findById (id) {
     const user = await User.findById(id)
 
@@ -52,11 +58,11 @@ class UserService {
   }
 
   /**
-     * Resgata um usuário
-     *
-     * @param {string} email
-     * @returns usuário
-     */
+   * Resgata um usuário dado email
+   *
+   * @param {string} email
+   * @returns usuário
+   */
   static async findByEmail (email) {
     const user = await User.findOne({ email })
 
