@@ -51,4 +51,24 @@ describe('UserService', () => {
       }).rejects.toThrowError('Senha errada.')
     })
   })
+
+  describe('findById', () => {
+    it('should be able to find and return a user', async () => {
+      await User.insertMany(userMock)
+
+      const user = await UserService.findById(userMock._id)
+
+      expect(user.nome).toEqual(userMock.nome)
+      expect(user.email).toEqual(userMock.email)
+      expect(user.role).toEqual(userMock.role)
+      expect(user.password).toEqual(userMock.password)
+      expect(user._id).toBeTruthy()
+    })
+
+    it('shouldnt be able to find a user and throw a error', async () => {
+      await expect(async () => {
+        await UserService.findById(userMock._id)
+      }).rejects.toThrowError(`Usuário com id ${userMock._id} não encontrado.`)
+    })
+  })
 })
