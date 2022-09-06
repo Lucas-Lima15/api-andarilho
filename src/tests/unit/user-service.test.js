@@ -71,4 +71,24 @@ describe('UserService', () => {
       }).rejects.toThrowError(`Usuário com id ${userMock._id} não encontrado.`)
     })
   })
+
+  describe('findByEmail', () => {
+    it('should be able to find return a user', async () => {
+      await User.insertMany(userMock)
+
+      const user = await UserService.findByEmail(userMock.email)
+
+      expect(user.nome).toEqual(userMock.nome)
+      expect(user.email).toEqual(userMock.email)
+      expect(user.role).toEqual(userMock.role)
+      expect(user.password).toEqual(userMock.password)
+      expect(user._id).toBeTruthy()
+    })
+
+    it('shouldnt be able to find a user an throw a error', async () => {
+      await expect(async () => {
+        await UserService.findByEmail(userMock.email)
+      }).rejects.toThrowError(`Usuário com email ${userMock.email} não encontrado.`)
+    })
+  })
 })
