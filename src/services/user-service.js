@@ -69,6 +69,7 @@ class UserService {
     if (!user) {
       const error = new Error(`Usuário com email ${email} não encontrado.`)
       error.status = 404
+      throw error
     }
 
     return user
