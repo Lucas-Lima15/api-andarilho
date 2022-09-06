@@ -27,7 +27,9 @@ router.post('/user/signup', async (req, res, next) => {
     const user = await UserService.create({ nome, email, password, role })
 
     return res.json({
-      user
+      data: {
+        user
+      }
     })
   } catch (error) {
     next(error)
@@ -53,8 +55,10 @@ router.post('/user/login', async (req, res, next) => {
     const token = await AuthService.getToken(user)
 
     return res.json({
-      user,
-      token
+      data: {
+        user,
+        token
+      }
     })
   } catch (error) {
     next(error)
