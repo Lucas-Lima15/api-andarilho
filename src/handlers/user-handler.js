@@ -75,4 +75,10 @@ router.get('/user/test', AuthMiddleware.verifyJwt, async (req, res, next) => {
   }
 })
 
+router.get('/', (req, res) => {
+  res.json({
+    message: 'funciona'
+  })
+})
+
 module.exports = router
