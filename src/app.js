@@ -15,7 +15,7 @@ class App {
   }
 
   listen () {
-    this.express.listen(process.env.PORT, () => {
+    this.express.listen(process.env.PORT || 3000, () => {
       console.log(`Servidor rodando na porta ${process.env.PORT} ${new Date()}`)
     })
   }
