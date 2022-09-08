@@ -2,6 +2,7 @@ const express = require('express')
 
 const AuthService = require('../services/auth-service')
 const UserService = require('../services/user-service')
+const UserValidation = require('../validations/user-validation')
 
 const router = express.Router()
 
@@ -22,6 +23,8 @@ const router = express.Router()
 router.post('/user/signup', async (req, res, next) => {
   const { nome, email, password, role } = req.body
   try {
+    await UserValidation.personalData(req.body)
+    await UserValidation.verifyEmail(email)
     const user = await UserService.create({ nome, email, password, role })
 
     return res.json({

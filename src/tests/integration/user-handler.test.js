@@ -8,6 +8,8 @@ const server = app.express
 
 const User = require('../../models/user')
 
+const userMock = require('../mock/userMock')
+
 describe('UserHandler', () => {
   beforeAll(async () => {
     MongoDB.connectTest()
@@ -41,6 +43,24 @@ describe('UserHandler', () => {
       expect(body.data.user.email).toBe(data.email)
       expect(body.data.user.role).toEqual(data.role)
       expect(verifyPassword).toBe(true)
+    })
+
+    it('shouldnt be able to signup a user and return a error if email already exists', async () => {
+      await User.insertMany(userMock)
+
+      const data = {
+        nome: userMock.nome,
+        email: userMock.email,
+        password: '1234',
+        role: ['user']
+      }
+
+      const { body } = await request(server)
+        .post('/user/signup')
+        .send(data)
+        .expect(400)
+
+      expect(body.errors.detail).toBe('Já existe usuário com este email.')
     })
   })
 })
