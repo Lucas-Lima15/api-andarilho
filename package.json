@@ -4,7 +4,7 @@
   "description": "Api para o aplicativo Andarilho",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "start": "node server.js",
     "startDevelop": "nodemon server.js"
   },
@@ -15,6 +15,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "joi-translation-pt-br": "^0.0.6",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.4"
   },
