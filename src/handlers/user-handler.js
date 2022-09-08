@@ -1,7 +1,5 @@
 const express = require('express')
 
-const AuthMiddleware = require('../middlewares/auth-middleware')
-
 const AuthService = require('../services/auth-service')
 const UserService = require('../services/user-service')
 
