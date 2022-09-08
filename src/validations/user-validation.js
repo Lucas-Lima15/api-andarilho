@@ -5,10 +5,14 @@ const User = require('../models/user')
 class UserValidation {
   static async personalData (user) {
     const schema = await Joi.object({
-      nome: Joi.string().required(),
-      email: Joi.string().email().required(),
-      role: Joi.array().empty().required(),
-      password: Joi.string().min(4).max(15).required(),
+      nome: Joi.string().empty().required(),
+      email: Joi.string().email().empty().required(),
+      role: Joi.array().required().custom((value, helpers) => {
+        if (value.length < 1) {
+          return helpers.message('"role" deve ter pelo menos um elemento')
+        }
+      }),
+      password: Joi.string().empty().min(4).max(15).required(),
       _id: Joi.string()
     })
 

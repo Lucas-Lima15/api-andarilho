@@ -66,6 +66,24 @@ describe('UserValidator', () => {
 
       expect(result).toBe('\"email\" deve ser um e-mail válido')
     })
+
+    it('should throw error if role is empty', async () => {
+      let result
+
+      const user = {
+        ...userMock,
+        password: '1234',
+        role: []
+      }
+
+      try {
+        await UserValidation.personalData(user)
+      } catch (error) {
+        result = error.message
+      }
+
+      expect(result).toBe('"role" deve ter pelo menos um elemento')
+    })
   })
 
   describe('verifyEmail', () => {
