@@ -65,20 +65,4 @@ router.post('/user/login', async (req, res, next) => {
   }
 })
 
-router.get('/user/test', AuthMiddleware.verifyJwt, async (req, res, next) => {
-  try {
-    const token = await AuthService.getToken(req.user)
-
-    res.json({ message: 'Rota protegida acessada', token })
-  } catch (err) {
-    next(err)
-  }
-})
-
-router.get('/', (req, res) => {
-  res.json({
-    message: 'funciona'
-  })
-})
-
 module.exports = router
