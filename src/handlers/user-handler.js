@@ -25,6 +25,7 @@ router.post('/user/signup', async (req, res, next) => {
   try {
     await UserValidation.personalData(req.body)
     await UserValidation.verifyEmail(email)
+
     const user = await UserService.create({ nome, email, password, role })
 
     return res.json({
