@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const TokenExpiredError = require('../errors/token-expired-error')
 const UserService = require('../services/user-service')
 
 class AuthMiddleware {
@@ -22,18 +23,14 @@ class AuthMiddleware {
       }
 
       await jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err?.name === 'TokenExpiredError') {
-          error = new Error('Token expirado')
-          error.status = 403
-        }
+        if (err?.name === 'TokenExpiredError') throw new TokenExpiredError('Token expirado')
 
         if (err) throw err
 
         id = decoded._id
       })
 
-      if (id) req.user = await UserService.findById(id)
-      else throw new Error()
+      req.user = await UserService.findById(id)
 
       next()
     } catch (err) {

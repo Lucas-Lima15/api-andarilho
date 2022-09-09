@@ -1,5 +1,8 @@
 const Joi = require('joi')
 const { messages } = require('joi-translation-pt-br')
+
+const ValidationError = require('../errors/validation-error')
+
 const User = require('../models/user')
 
 class UserValidation {
@@ -17,11 +20,9 @@ class UserValidation {
     })
 
     const result = await schema.validate(user, { abortEarly: false, messages })
-    if (result.error) {
-      const error = result.error
-      error.status = 400
-      throw error
-    }
+
+    if (result.error) throw new ValidationError(result.error.message)
+
     return true
   }
 
@@ -37,11 +38,9 @@ class UserValidation {
     })
 
     const result = await schema.validate(email, { abortEarly: false, messages })
-    if (result.error) {
-      const error = result.error
-      error.status = 400
-      throw error
-    }
+
+    if (result.error) throw new ValidationError(result.error.message)
+
     return true
   }
 }
