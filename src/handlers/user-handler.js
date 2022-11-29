@@ -1,4 +1,5 @@
 const express = require('express')
+const AuthMiddleware = require('../middlewares/auth-middleware')
 
 const AuthService = require('../services/auth-service')
 const UserService = require('../services/user-service')
@@ -15,22 +16,43 @@ const router = express.Router()
  *
  * @required
  * @in body
- * @param {string} nome nome do usuário
  * @param {string} email email do usuário
- * @param {string} password senha
- * @param {Array} role os papeis que o usuário tem
+ * @param {string} senha senha
+ * @param {string} role os papeis que o usuário tem
+ * @param {string} nome
+ * @param {string} sexo
+ * @param {string} dataNascimento
+ * @param {string} cpf
  */
 router.post('/user/signup', async (req, res, next) => {
-  const { nome, email, password, role } = req.body
+  const {
+    email,
+    senha,
+    role,
+    nome,
+    sexo,
+    dataNascimento,
+    cpf
+  } = req.body || {}
   try {
-    await UserValidation.personalData(req.body)
+    const user = {
+      email,
+      senha,
+      role,
+      nome,
+      sexo,
+      dataNascimento,
+      cpf
+    }
+
+    await UserValidation.userData(user)
     await UserValidation.verifyEmail(email)
 
-    const user = await UserService.create({ nome, email, password, role })
+    const userCreated = await UserService.create(user)
 
     return res.json({
       data: {
-        user
+        user: userCreated
       }
     })
   } catch (error) {
@@ -48,12 +70,16 @@ router.post('/user/signup', async (req, res, next) => {
  * @required
  * @in body
  * @param {string} email email do usuário
- * @param {string} password senha do usuário
+ * @param {string} senha senha do usuário
  */
 router.post('/user/login', async (req, res, next) => {
-  const { email, password } = req.body
+  const { email, senha } = req.body
+
+  await UserValidation.email(email)
+  await UserValidation.senha(senha)
+
   try {
-    const user = await UserService.login(email, password)
+    const user = await UserService.login(email, senha)
     const token = await AuthService.getToken(user)
 
     return res.json({
@@ -65,6 +91,10 @@ router.post('/user/login', async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+})
+
+router.get('/user/test', AuthMiddleware.verifyJwt, (req, res) => {
+  return res.json({ teste: true })
 })
 
 module.exports = router

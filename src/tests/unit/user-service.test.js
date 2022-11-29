@@ -21,10 +21,10 @@ describe('UserService', () => {
 
   describe('create', () => {
     it('should be able to create a user', async () => {
-      const user = { ...userMock, password: '1234', _id: null }
+      const user = { ...userMock, senha: '1234', _id: null }
       const userCreated = await UserService.create(user)
 
-      const isCorrectPassword = await bcrypt.compare('1234', userCreated.password)
+      const isCorrectPassword = await bcrypt.compare('1234', userCreated.senha)
 
       expect(userCreated.nome).toEqual(userMock.nome)
       expect(userCreated.email).toEqual(userMock.email)

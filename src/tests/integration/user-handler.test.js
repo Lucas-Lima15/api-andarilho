@@ -28,17 +28,17 @@ describe('UserHandler', () => {
       const data = {
         nome: 'Lucas',
         email: 'lucas@test.com',
-        password: '1234',
+        senha: '1234',
         role: ['user']
       }
 
       const { body } = await request(server)
         .post('/user/signup')
         .send(data)
-        .expect(200)
 
-      const verifyPassword = await bcrypt.compare(data.password, body.data.user.password)
+      const verifyPassword = await bcrypt.compare(data.senha, body.data.user.senha)
 
+      expect(body).toBe({})
       expect(body.data.user.nome).toBe(data.nome)
       expect(body.data.user.email).toBe(data.email)
       expect(body.data.user.role).toEqual(data.role)
@@ -51,7 +51,7 @@ describe('UserHandler', () => {
       const data = {
         nome: userMock.nome,
         email: userMock.email,
-        password: '1234',
+        senha: '1234',
         role: ['user']
       }
 

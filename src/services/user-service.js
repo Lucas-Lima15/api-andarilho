@@ -14,7 +14,7 @@ class UserService {
    */
   static async create (user) {
     const salt = await bcrypt.genSalt(10)
-    user.password = await bcrypt.hash(user.password, salt)
+    user.senha = await bcrypt.hash(user.senha, salt)
 
     const userCreated = await User.create(user)
 
@@ -25,13 +25,13 @@ class UserService {
    * Verifica se existe usuário com este email e se a senha é válida
    *
    * @param {string} email
-   * @param {string} password
+   * @param {string} senha
    * @returns usuário
    */
-  static async login (email, password) {
+  static async login (email, senha) {
     const user = await UserService.findByEmail(email)
 
-    const validPassword = await bcrypt.compare(password, user.password)
+    const validPassword = await bcrypt.compare(senha, user.senha)
 
     if (!validPassword) throw new ValidationError('Senha errada.')
 

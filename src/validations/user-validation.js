@@ -5,25 +5,64 @@ const ValidationError = require('../errors/validation-error')
 
 const User = require('../models/user')
 
+const options = {
+  abortEarly: false, messages
+}
+
 class UserValidation {
-  static async personalData (user) {
-    const schema = await Joi.object({
+  static async userData (user) {
+    const schema = Joi.object({
+      email: Joi.string().empty().email().required(),
+      senha: Joi.string().empty().required(),
+      role: Joi.string().empty().required(),
       nome: Joi.string().empty().required(),
-      email: Joi.string().email().empty().required(),
-      role: Joi.array().required().custom((value, helpers) => {
-        if (value.length < 1) {
-          return helpers.message('"role" deve ter pelo menos um elemento')
-        }
-      }),
-      password: Joi.string().empty().min(4).max(15).required(),
-      _id: Joi.string()
+      sexo: Joi.string().empty().required(),
+      dataNascimento: Joi.string().empty().required(),
+      cpf: Joi.string().empty().required()
     })
 
-    const result = await schema.validate(user, { abortEarly: false, messages })
+    const result = await schema.validate(user, options)
 
     if (result.error) throw new ValidationError(result.error.message)
+  }
 
-    return true
+  static async email (email) {
+    const result = await Joi.string().empty().email().required().validate(email, options)
+
+    if (result.error) throw new ValidationError(result.error.message)
+  }
+
+  static async senha (senha) {
+    const result = await Joi.string().empty().required().validate(senha, options)
+
+    if (result.error) throw new ValidationError(result.error.message)
+  }
+
+  static async personalData (personalData) {
+    const schema = await Joi.object({
+      nome: Joi.string(),
+      genero: Joi.string().valid('masculino', 'feminino'),
+      dataNascimento: Joi.date(),
+      cpf: Joi.string(),
+      rg: Joi.string()
+    })
+
+    const result = await schema.validate(personalData, options)
+
+    if (result.error) throw new ValidationError(result.error.message)
+  }
+
+  static async adress (adress) {
+    const schema = await Joi.object({
+      cep: Joi.string(),
+      endereco: Joi.string(),
+      complemento: Joi.string(),
+      pontoReferencia: Joi.string()
+    })
+
+    const result = await schema.validate(adress, options)
+
+    if (result.error) throw new ValidationError(result.error.message)
   }
 
   static async verifyEmail (email) {
@@ -37,11 +76,9 @@ class UserValidation {
       return value
     })
 
-    const result = await schema.validate(email, { abortEarly: false, messages })
+    const result = await schema.validate(email, options)
 
     if (result.error) throw new ValidationError(result.error.message)
-
-    return true
   }
 }
 
