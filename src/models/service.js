@@ -17,8 +17,9 @@ const serviceSchema = mongoose.Schema({
     type: String,
     default: null
   },
-  idUser: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     default: null
   }
 }, { timestamps: true })
