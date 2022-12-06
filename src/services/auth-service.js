@@ -10,7 +10,7 @@ class AuthService {
   static async getToken (user) {
     const { _id } = user
     const token = await jwt.sign({ _id, date: new Date() }, process.env.JWT_SECRET, {
-      expiresIn: '5m'
+      expiresIn: '20m'
     })
 
     return token

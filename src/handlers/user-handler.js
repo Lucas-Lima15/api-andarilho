@@ -2,6 +2,7 @@ const express = require('express')
 const AuthMiddleware = require('../middlewares/auth-middleware')
 
 const AuthService = require('../services/auth-service')
+const ServiceService = require('../services/service-service')
 const UserService = require('../services/user-service')
 const UserValidation = require('../validations/user-validation')
 
@@ -92,6 +93,51 @@ router.post('/user/login', async (req, res, next) => {
     next(error)
   }
 })
+
+router.post('/service', AuthMiddleware.verifyJwt, async (req, res, next) => {
+  const { nome, cnpj, tipoServico, categoria } = req.body
+  const idUser = req.user._id
+
+  try {
+    const service = await ServiceService.create({ nome, cnpj, tipoServico, categoria, idUser })
+
+    return res.json({
+      data: {
+        service
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/service', AuthMiddleware.verifyJwt, async (req, res, next) => {
+  try {
+    const services = await ServiceService.getServices()
+
+    return res.json({
+      data: {
+        services
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
+})
+
+// router.put('/service', AuthMiddleware.verifyJwt, async (req, res, next) => {
+//   try {
+//     const service = await ServiceService.getServices()
+
+//     return res.json({
+//       data: {
+//         service
+//       }
+//     })
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 
 router.get('/user/test', AuthMiddleware.verifyJwt, (req, res) => {
   return res.json({ teste: true })
